@@ -132,22 +132,29 @@ const ToDoList = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mb: 1,
+          mb: 3,
         }}
       >
-        <Typography
-          sx={{ fontSize: 20, fontWeight: 600, textTransform: "capitalize" }}
-        >
+        <Typography variant="h4" fontWeight={700}>
           ToDo List
         </Typography>
-        <Button
-          variant="contained"
-          onClick={() => handleOpen()}
-          sx={{ textTransform: "capitalize" }}
-        >
-          Add Todo
-        </Button>
+
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button variant="contained" sx={{ textTransform: "capitalize" }}>
+            Add ToDo
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleLogout}
+            sx={{ textTransform: "capitalize" }}
+          >
+            Logout
+          </Button>
+        </Box>
       </Box>
+
       <Box>
         {isLoading && (
           <Typography textAlign="center" sx={{ m: 20 }}>
@@ -188,17 +195,6 @@ const ToDoList = () => {
             </ListItem>
           ))}
         </List>
-      </Box>
-
-      <Box sx={{ mt: 2, mb: 3, textAlign: "center" }}>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleLogout}
-          sx={{ textTransform: "capitalize", px: 4 }}
-        >
-          Logout
-        </Button>
       </Box>
 
       {/* delete confirmation dialog */}
