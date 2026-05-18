@@ -30,7 +30,8 @@ const ToDoList = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/");
+    localStorage.removeItem("accessToken");
+    navigate("/", { replace: true });
   };
 
   const { data, isLoading, error, mutate } = useSWR(

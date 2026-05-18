@@ -88,6 +88,16 @@ const iconStyle = {
 
 const Login = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("accessToken") ||
+      localStorage.getItem("refreshToken")
+    ) {
+      navigate("/todoList", { replace: true });
+    }
+  }, []);
+
   const [emailError, setEmailError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -204,7 +214,8 @@ const Login = () => {
       });
 
       console.log("API Response:", response.data);
-      navigate("/todoList");
+      localStorage.setItem("token", response.data.accessToken);
+      navigate("/todoList", { replace: true });
 
       setLoading(false);
       setFormData(initialState);
