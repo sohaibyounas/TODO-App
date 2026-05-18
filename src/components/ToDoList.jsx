@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -42,6 +43,8 @@ const ToDoList = () => {
   const [editItem, setEditItem] = useState(null);
   const [todoText, setTodoText] = useState("");
   const [deleteItem, setDeleteItem] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const handleOpen = (todo = null) => {
     setEditItem(todo);
@@ -57,6 +60,7 @@ const ToDoList = () => {
 
   const handleSave = async () => {
     if (!todoText.trim()) return;
+    setLoading(true);
     if (editItem) {
       await updateTodo(editItem.id, { todo: todoText });
       mutate(
@@ -71,16 +75,19 @@ const ToDoList = () => {
       });
       mutate([...data, res.data], false);
     }
+    setLoading(false);
     handleClose();
   };
 
   const handleDelete = async () => {
+    setDeleteLoading(true);
     await deleteTodo(deleteItem.id);
     mutate(
       data.filter((t) => t.id !== deleteItem.id),
       false,
     );
     setDeleteItem(null);
+    setDeleteLoading(false);
   };
 
   const INPUT_HEIGHT = 46;
@@ -135,12 +142,20 @@ const ToDoList = () => {
           mb: 3,
         }}
       >
-        <Typography variant="h4" fontWeight={700}>
+        <Typography
+          variant="h4"
+          sx={{ fontSize: { xs: 16, sm: 20 }, fontWeight: 600 }}
+        >
           ToDo List
         </Typography>
 
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Button variant="contained" sx={{ textTransform: "capitalize" }}>
+          <Button
+            variant="contained"
+            disableElevation
+            onClick={() => handleOpen()}
+            sx={{ textTransform: "capitalize" }}
+          >
             Add ToDo
           </Button>
 
@@ -157,28 +172,28 @@ const ToDoList = () => {
 
       <Box>
         {isLoading && (
-          <Typography textAlign="center" sx={{ m: 20 }}>
-            Loading...
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+            <CircularProgress size="25px" color="inherit" />
+          </Box>
         )}
         {error && (
           <Typography textAlign="center" color="error">
             Failed to load todos
           </Typography>
         )}
-        <List>
+        <List sx={{ border: "1px solid #e0e0e0", borderRadius: "10px" }}>
           {data?.map((todo) => (
             <ListItem
               key={todo.id}
               disablePadding
-              sx={{ textWrap: "wrap" }}
+              sx={{ pr: 12, pl: "14px" }}
               secondaryAction={
                 <Box>
                   <IconButton onClick={() => handleOpen(todo)}>
-                    <Edit />
+                    <Edit sx={{ fontSize: { xs: 16, sm: 20 } }} />
                   </IconButton>
                   <IconButton onClick={() => setDeleteItem(todo)}>
-                    <Delete />
+                    <Delete sx={{ fontSize: { xs: 16, sm: 20 } }} />
                   </IconButton>
                 </Box>
               }
@@ -230,13 +245,23 @@ const ToDoList = () => {
             variant="contained"
             color="error"
             onClick={handleDelete}
+            disableElevation
             sx={{
               textTransform: "capitalize",
               width: "100%",
+              height: 36,
               borderRadius: "8px",
+              // boxShadow: "none",
+              // "&:hover": {
+              //   boxShadow: "none",
+              // },
             }}
           >
-            Delete
+            {deleteLoading ? (
+              <CircularProgress size="20px" color="inherit" />
+            ) : (
+              "Delete"
+            )}
           </Button>
         </DialogActions>
       </Dialog>
@@ -280,13 +305,23 @@ const ToDoList = () => {
           <Button
             variant="contained"
             onClick={handleSave}
+            disableElevation
             sx={{
               textTransform: "capitalize",
               width: "100%",
+              height: 36,
               borderRadius: "8px",
+              // boxShadow: "none",
+              // "&:hover": {
+              //   boxShadow: "none",
+              // },
             }}
           >
-            Save
+            {loading ? (
+              <CircularProgress size="20px" color="inherit" />
+            ) : (
+              "Save"
+            )}
           </Button>
         </DialogActions>
       </Dialog>

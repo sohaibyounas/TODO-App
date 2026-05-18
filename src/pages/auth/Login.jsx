@@ -264,7 +264,7 @@ const Login = () => {
           This is login page
         </Typography>
 
-        <Box>
+        <Box component="form" onSubmit={handleSubmit}>
           {/* <Box>
             <Typography sx={inputSx}>Email*</Typography>
             <TextField
